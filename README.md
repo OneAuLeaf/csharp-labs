@@ -1,2 +1,4 @@
 # csharp-labs
- Labs for C# course
+ Лабораторные работы по курсу ООП и C#
+ 
+	- Лабораторная работа 1 - 5 вариант - (pending review)
