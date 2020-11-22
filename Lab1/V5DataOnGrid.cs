@@ -1,6 +1,5 @@
 using System;
 using System.Numerics;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
@@ -26,17 +25,42 @@ namespace Lab
             {
                 fs = new FileStream(filename, FileMode.Open);
                 StreamReader reader = new StreamReader(fs);
-                var base_arg = reader.ReadLine().Split(";");
-                var grid_arg = reader.ReadLine().Split(";");
+                var base_line = reader.ReadLine();
+                if (base_line == null) {
+                    throw new Exception("V5Data arguments not found");
+                }
+                var grid_line = reader.ReadLine();
+                if (grid_line == null) {
+                    throw new Exception("Grid2D arguments not found");
+                }
+                var base_arg = base_line.Split(";");
+                if (base_arg.Length - 1 < 2) {
+                        throw new Exception($"Not enough V5Data arguments, {base_arg.Length - 1} found, while 2 expected");
+                }
+                var grid_arg = grid_line.Split(";");
+                if (grid_arg.Length - 1 < 4) {
+                        throw new Exception($"Not enough Grid2D arguments, {grid_arg.Length - 1} found, while 4 expected");
+                }
 
                 MetaData = base_arg[0];
                 DateMod = DateTime.Parse(base_arg[1]);
                 Grid = new Grid2D(float.Parse(grid_arg[0]), float.Parse(grid_arg[1]), int.Parse(grid_arg[2]), int.Parse(grid_arg[3]));
+
                 GridValues = new Vector2[Grid.Nx, Grid.Ny];
                 for (int i = 0; i < Grid.Nx; ++i) {
-                    var line = reader.ReadLine().Split(";");
+                    var line = reader.ReadLine();
+                    if (line == null) {
+                        throw new Exception($"Not enough rows, {i} found, while {Grid.Nx} expected");
+                    }
+                    var args = line.Split(";");
+                    if (args.Length - 1 < Grid.Ny) {
+                        throw new Exception($"Not enough columns, {args.Length - 1} found, while {Grid.Ny} expected");
+                    }
                     for (int j = 0; j < Grid.Ny; ++j) {
-                        var vector  = line[j].Split(" ");
+                        var vector  = args[j].Split(" ");
+                        if (vector.Length < 2) {
+                            throw new Exception($"Not enough coords, {vector.Length} found, while 2 expected");
+                        }
                         GridValues[i, j] = new Vector2(float.Parse(vector[0]), float.Parse(vector[1]));
                     }
                 }
@@ -45,6 +69,11 @@ namespace Lab
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+
+                MetaData = "error occured";
+                DateMod = new DateTime();
+                Grid = new Grid2D(0, 0, 0, 0);
+                GridValues = new Vector2[0, 0];
             }
             finally
             {
@@ -99,7 +128,7 @@ namespace Lab
 
         public override string ToLongString(string format)
         {
-            string str = ToString(format) + "\nItems:\n";
+            string str = ToString(format) + "\nItems:\n\t";
             foreach (var item in this) {
                 str += item.ToString(format) + "\n\t";
             }

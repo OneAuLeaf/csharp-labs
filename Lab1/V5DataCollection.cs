@@ -46,7 +46,7 @@ namespace Lab
 
         public override string ToLongString(string format)
         {
-            string str = ToString(format) + "\nItems:\n";
+            string str = ToString(format) + "\nItems:\n\t";
             foreach (var item in this) {
                 str += item.ToString(format) + "\n\t";
             }

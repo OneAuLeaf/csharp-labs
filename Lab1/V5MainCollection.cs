@@ -10,10 +10,10 @@ namespace Lab
     {
         private List<V5Data> listV5Data = new List<V5Data>();
         public int Count => listV5Data.Count;
-        public float MinLenght => 
+        public float? MinLenght => 
             (from data in listV5Data
             where data.Count() > 0
-            select data.Min(z => z.EMValue.Length())).Min();
+            select data.Min(z => z.EMValue.Length())).Min(z => (float?) z);
         public IEnumerable<DataItem> MinLenghtIterator => 
             from data in listV5Data
             from item in data
