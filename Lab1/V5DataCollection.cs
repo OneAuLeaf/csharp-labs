@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Lab
 {
-    public class V5DataCollection: V5Data
+    public class V5DataCollection: V5Data, IEnumerable<DataItem>
     {
         public Dictionary<Vector2, Vector2> GridValues { get; set; }
 
@@ -33,21 +33,36 @@ namespace Lab
             return res.ToArray();
         }
 
-        public override string ToString()
+        public override string ToString(string format)
         {
-            return base.ToString() + "\n\t" + 
+            return base.ToString(format) + "\n\t" + 
                 $"Items count:\t{GridValues.Count.ToString()}";
         }
 
-        public override string ToLongString()
+        public override string ToString()
         {
-            string str = ToString() + "\nItems:\n";
-            foreach (var item in GridValues) {
-                str += $"\t({item.Key.X}, {item.Key.Y}) = <{item.Value.X}, {item.Value.Y}>\n";
+            return ToString(null);
+        }
+
+        public override string ToLongString(string format)
+        {
+            string str = ToString(format) + "\nItems:\n\t";
+            foreach (var item in this) {
+                str += item.ToString(format) + "\n\t";
             }
             return str;
         }
 
-        
+        public override string ToLongString()
+        {
+            return ToLongString(null);
+        }
+
+        protected override IEnumerator<DataItem> Generator()
+        {
+            foreach (var item in GridValues) {
+                yield return new DataItem(item.Key, item.Value);
+            }
+        }
     }
 }
