@@ -1,4 +1,5 @@
 using System;
+using System.Numerics;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,24 @@ namespace Lab
     {
         private List<V5Data> listV5Data = new List<V5Data>();
         public int Count => listV5Data.Count;
-        public float MinLenght => 0;
-        public Enumerable<DataItem> MinLenghtDataGenerator => 0;
-        public Enumerable<Vector2> OnGridNotCollectionGenerator => 0;
+        public float MinLenght => 
+            (from data in listV5Data
+            select data.Min(z => z.EMValue.Length())).Min();
+        public IEnumerable<DataItem> MinLenghtDataIterator => 
+            from data in listV5Data
+            from item in data
+            where item.EMValue.Length() == MinLenght
+            select item;
+        public IEnumerable<Vector2> OnGridNotCollectionIterator =>
+            (from data in listV5Data
+            where data is V5DataOnGrid
+            from item in data as V5DataOnGrid
+            select item.Point)
+            .Except
+            (from data in listV5Data
+            where data is V5DataCollection
+            from item in data as V5DataCollection
+            select item.Point);
 
         public void Add(V5Data item)
         {

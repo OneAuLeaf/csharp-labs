@@ -9,7 +9,7 @@ namespace Lab
             // test 1
             Console.WriteLine("Test V5DataOnGrid file constructor");
             string format = "f4";
-            string filename = null;
+            string filename = "test1.txt";
             V5DataOnGrid dataGrid = new V5DataOnGrid(filename);
             Console.WriteLine(dataGrid.ToLongString(format));
 
@@ -23,8 +23,8 @@ namespace Lab
             // test 3
             Console.WriteLine("Test V5MainCollection LINQ selects:");
             Console.WriteLine($"Min lenght in V5DataCollection : {dataMain.MinLenght.ToString(format)}");
-            Console.WriteLine($"Items with min lenght in V5MainCollection : {string.Join(", ", dataMain.MinLenghtDataGenerator)}");
-            Console.WriteLine($"Points that are in V5OnDataGrid and not in V5DataCollection : {string.Join(", ", dataMain.MinLenghtDataGenerator)}");
+            Console.WriteLine($"Items with min lenght in V5MainCollection : {string.Join(", ", dataMain.MinLenghtDataIterator)}");
+            Console.WriteLine($"Points that are in V5OnDataGrid and not in V5DataCollection : {string.Join(", ", dataMain.OnGridNotCollectionIterator)}");
         }
     }
 }

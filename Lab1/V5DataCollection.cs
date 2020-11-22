@@ -1,10 +1,11 @@
 using System;
 using System.Numerics;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Lab
 {
-    public class V5DataCollection: V5Data
+    public class V5DataCollection: V5Data, IEnumerable<DataItem>
     {
         public Dictionary<Vector2, Vector2> GridValues { get; set; }
 
@@ -53,6 +54,11 @@ namespace Lab
             return ToLongString(null);
         }
 
-        
+        protected override IEnumerator<DataItem> Generator()
+        {
+            foreach (var item in GridValues) {
+                yield return new DataItem(item.Key, item.Value);
+            }
+        }
     }
 }
