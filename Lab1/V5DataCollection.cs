@@ -39,13 +39,18 @@ namespace Lab
                 $"Items count:\t{GridValues.Count.ToString()}";
         }
 
-        public override string ToLongString()
+        public override string ToLongString(string format)
         {
             string str = ToString() + "\nItems:\n";
             foreach (var item in GridValues) {
-                str += $"\t({item.Key.X}, {item.Key.Y}) = <{item.Value.X}, {item.Value.Y}>\n";
+                str += $"\t({item.Key.X.ToString(format)}, {item.Key.Y.ToString(format)}) = <{item.Value.X.ToString(format)}, {item.Value.Y.ToString(format)}>\n";
             }
             return str;
+        }
+
+        public override string ToLongString()
+        {
+            return ToLongString(null);
         }
 
         

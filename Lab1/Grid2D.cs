@@ -15,9 +15,14 @@ namespace Lab
             Ny = ny;
         }
 
+        public string ToString(string format)
+        {
+            return $"Ox step: {Ox.ToString(format)}\tNumber of steps: {Nx}\tOy step: {Oy.ToString(format)}\tNumber of steps: {Ny}";
+        }
+
         public override string ToString()
         {
-            return $"Ox step: {Ox}\tNumber of steps: {Nx}\tOy step: {Oy}\tNumber of steps: {Ny}";
+            return ToString(null);
         }
     }
 }

@@ -7,29 +7,24 @@ namespace Lab
         static void Main(string[] args)
         {
             // test 1
-            Console.WriteLine("Test V5DataOnGrid and V5DataCollection types:");
-            Grid2D grid = new Grid2D(1, 1, 3, 3);
-            DateTime date = DateTime.Now;
-            string info = "test";
-            V5DataOnGrid dataGrid = new V5DataOnGrid(grid, info, date);
-            dataGrid.InitRandom(-1, 1);
-            Console.WriteLine(dataGrid.ToLongString());
-            V5DataCollection dataCollection = (V5DataCollection) dataGrid;
-            Console.WriteLine(dataCollection.ToLongString());
+            Console.WriteLine("Test V5DataOnGrid file constructor");
+            string format = "f4";
+            string filename = null;
+            V5DataOnGrid dataGrid = new V5DataOnGrid(filename);
+            Console.WriteLine(dataGrid.ToLongString(format));
 
             // test 2
             Console.WriteLine("Test V5MainCollection type:");
             V5MainCollection dataMain = new V5MainCollection();
             dataMain.AddDefaults();
-            Console.WriteLine(dataMain);
+            Console.WriteLine(dataMain.ToLongString(format));
             Console.WriteLine();
 
             // test 3
-            float eps = 0.2f;
-            Console.WriteLine("Test NearEqual(eps) method with eps = {0}:", eps);
-            foreach (var item in dataMain) {
-                Console.WriteLine("[{0}]", string.Join(", ", item.NearEqual(eps)));
-            }
+            Console.WriteLine("Test V5MainCollection LINQ selects:");
+            Console.WriteLine($"Min lenght in V5DataCollection : {dataMain.MinLenght.ToString(format)}");
+            Console.WriteLine($"Items with min lenght in V5MainCollection : {string.Join(", ", dataMain.MinLenghtDataGenerator)}");
+            Console.WriteLine($"Points that are in V5OnDataGrid and not in V5DataCollection : {string.Join(", ", dataMain.MinLenghtDataGenerator)}");
         }
     }
 }

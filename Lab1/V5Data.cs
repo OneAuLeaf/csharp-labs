@@ -16,6 +16,7 @@ namespace Lab
 
         public abstract Vector2[] NearEqual(float eps);
         public abstract string ToLongString();
+        public abstract string ToLongString(string format);
 
         public override string ToString()
         {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Lab
 {
@@ -8,6 +9,9 @@ namespace Lab
     {
         private List<V5Data> listV5Data = new List<V5Data>();
         public int Count => listV5Data.Count;
+        public float MinLenght => 0;
+        public Enumerable<DataItem> MinLenghtDataGenerator => 0;
+        public Enumerable<Vector2> OnGridNotCollectionGenerator => 0;
 
         public void Add(V5Data item)
         {
@@ -37,6 +41,16 @@ namespace Lab
             }
         }
 
+        public string ToLongString(string format)
+        {
+            return string.Join("\n", from data in listV5Data select data.ToLongString(format));
+        }
+
+        public override string ToString()
+        {
+            return string.Join("\n", listV5Data);
+        }
+
         IEnumerator<V5Data> IEnumerable<V5Data>.GetEnumerator()
         {
             return listV5Data.GetEnumerator();
@@ -46,10 +60,6 @@ namespace Lab
         {
             return listV5Data.GetEnumerator();
         }
-
-        public override string ToString()
-        {
-            return string.Join("\n", listV5Data);
-        }
+        
     }
 }
