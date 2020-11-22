@@ -15,7 +15,7 @@ namespace Lab
 
         public string ToString(string format)
         {
-            return $"Point: {Point.ToString(format)} EMValue: {EMValue.ToString(format)} Length: {EMValue.Length().ToString(format)}";
+            return $"Point: {Point.ToString(format)}\tEMValue: {EMValue.ToString(format)}\tLength: {EMValue.Length().ToString(format)}";
         }
 
         public override string ToString()

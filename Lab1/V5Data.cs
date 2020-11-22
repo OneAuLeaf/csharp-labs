@@ -17,9 +17,21 @@ namespace Lab
         }
 
         public abstract Vector2[] NearEqual(float eps);
-        public abstract string ToLongString();
         public abstract string ToLongString(string format);
+        public abstract string ToLongString();
         protected abstract IEnumerator<DataItem> Generator();
+
+        public virtual string ToString(string format)
+        {
+            return base.ToString() + ":\n\t" + 
+                    $"Info: {MetaData}\tDate: {DateMod}";
+
+        }
+
+        public override string ToString()
+        {
+            return ToString(null);
+        }
 
         IEnumerator<DataItem> IEnumerable<DataItem>.GetEnumerator()
         {
@@ -29,12 +41,6 @@ namespace Lab
         IEnumerator IEnumerable.GetEnumerator()
         {
             return Generator();
-        }
-
-        public override string ToString()
-        {
-            return base.ToString() + ":\n\t" + 
-                    $"Info: {MetaData}\tDate: {DateMod}";
         }
     }
 }

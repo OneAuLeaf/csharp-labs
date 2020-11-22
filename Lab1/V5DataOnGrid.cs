@@ -17,6 +17,8 @@ namespace Lab
             GridValues = new Vector2[Grid.Nx, Grid.Ny];
         }
 
+
+        // template in ./tests/template.pdf
         public V5DataOnGrid(string filename) : base("", new DateTime())
         {
             FileStream fs = null;
@@ -84,19 +86,22 @@ namespace Lab
             return res.ToArray();
         }
 
+        public override string ToString(string format)
+        {
+            return base.ToString(format) + "\n\t" + 
+                    Grid.ToString(format);
+        }
+
         public override string ToString()
         {
-            return base.ToString() + "\n\t" + 
-                    Grid.ToString();
+            return ToString(null);
         }
 
         public override string ToLongString(string format)
         {
-            string str = ToString() + "\nItems:\n";
-            for (int x = 0; x < GridValues.GetLength(0); ++x) {
-                for (int y = 0; y < GridValues.GetLength(1); ++y) {
-                    str += $"\t({(x * Grid.Ox).ToString(format)}, {(y * Grid.Oy).ToString(format)}) = <{GridValues[x, y].X.ToString(format)}, {GridValues[x, y].Y.ToString(format)}>\n";
-                }
+            string str = ToString(format) + "\nItems:\n";
+            foreach (var item in this) {
+                str += item.ToString(format) + "\n\t";
             }
             return str;
         }

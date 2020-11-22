@@ -1,6 +1,5 @@
 using System;
 using System.Numerics;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Lab
@@ -34,17 +33,22 @@ namespace Lab
             return res.ToArray();
         }
 
+        public override string ToString(string format)
+        {
+            return base.ToString(format) + "\n\t" + 
+                $"Items count:\t{GridValues.Count.ToString()}";
+        }
+
         public override string ToString()
         {
-            return base.ToString() + "\n\t" + 
-                $"Items count:\t{GridValues.Count.ToString()}";
+            return ToString(null);
         }
 
         public override string ToLongString(string format)
         {
-            string str = ToString() + "\nItems:\n";
-            foreach (var item in GridValues) {
-                str += $"\t({item.Key.X.ToString(format)}, {item.Key.Y.ToString(format)}) = <{item.Value.X.ToString(format)}, {item.Value.Y.ToString(format)}>\n";
+            string str = ToString(format) + "\nItems:\n";
+            foreach (var item in this) {
+                str += item.ToString(format) + "\n\t";
             }
             return str;
         }
