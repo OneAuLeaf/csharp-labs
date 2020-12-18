@@ -22,7 +22,7 @@ namespace Lab
         public V5DataOnGrid(string filename) : base("", new DateTime())
         {
             var culture = CultureInfo.CurrentCulture;
-            System.Console.WriteLine(culture);
+
             CultureInfo.CurrentCulture = new CultureInfo("ru-RU");
             FileStream fs = null;
             try
