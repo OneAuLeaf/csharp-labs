@@ -19,7 +19,7 @@ namespace Lab
 
         public override string ToString()
         {
-            return ElementType + " " + ChangeInfo;
+            return ChangeInfo + " " + ElementType;
         }
     }
 }

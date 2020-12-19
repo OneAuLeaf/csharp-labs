@@ -17,7 +17,7 @@ namespace Lab
 
         void CollectionChangesHandler(object sender, PropertyChangedEventArgs args)
         {
-            OnDataChanged(sender.GetType().ToString(), ChangeInfo.ItemChanged);
+            OnDataChanged(sender.GetType().ToString() + " " + args.PropertyName, ChangeInfo.ItemChanged);
         }
 
         public V5Data this[int j]
@@ -45,12 +45,11 @@ namespace Lab
                 return false;
             }
             
-            foreach (var item in removable) {
+            foreach (var item in removable.ToList()) {
                 item.PropertyChanged -= CollectionChangesHandler;
+                listV5Data.Remove(item);
                 OnDataChanged(item.GetType().ToString(), ChangeInfo.Remove);
             }
-
-            listV5Data.RemoveAll(item => removable.Contains(item));
 
             return true;   
         }
