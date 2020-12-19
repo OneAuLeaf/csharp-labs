@@ -2,6 +2,7 @@ using System;
 using System.Numerics;
 using System.Collections.Generic;
 using System.IO;
+using System.Globalization;
 
 namespace Lab
 {
@@ -20,6 +21,9 @@ namespace Lab
         // template in ./tests/template.pdf
         public V5DataOnGrid(string filename) : base("", new DateTime())
         {
+            var culture = CultureInfo.CurrentCulture;
+
+            CultureInfo.CurrentCulture = new CultureInfo("ru-RU");
             FileStream fs = null;
             try
             {
@@ -80,6 +84,7 @@ namespace Lab
                 if (fs != null) {
                     fs.Close();
                 }
+                CultureInfo.CurrentCulture = culture;
             }
         }
 

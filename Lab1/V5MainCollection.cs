@@ -6,9 +6,10 @@ using System.Linq;
 
 namespace Lab
 {
-    public class V5MainCollection: IEnumerable<V5Data>
+    public partial class V5MainCollection: IEnumerable<V5Data>
     {
         private List<V5Data> listV5Data = new List<V5Data>();
+
         public int Count => listV5Data.Count;
         public float? MinLenght => 
             (from data in listV5Data
@@ -30,26 +31,12 @@ namespace Lab
             from item in data
             select item.Point);
 
-        public void Add(V5Data item)
-        {
-            listV5Data.Add(item);
-        }
-
-        public bool Remove(string id, DateTime date)
-        {
-            if (listV5Data.RemoveAll(item => item.MetaData == id && item.DateMod == date) > 0) {
-                return true;
-            }
-            return false;
-        }
-
         public void AddDefaults()
         {
-            listV5Data.Add(new V5DataOnGrid(@"./tests/test_0.txt"));
-            listV5Data.Add(new V5DataOnGrid(@"./tests/test_1.txt"));
-            listV5Data.Add(new V5DataOnGrid(@"./tests/test_empty.txt"));
-            listV5Data.Add((V5DataCollection) new V5DataOnGrid(@"./tests/test_1.txt"));
-            listV5Data.Add(new V5DataCollection($"empty", new DateTime()));
+            Add(new V5DataOnGrid(@"./tests/test_0.txt"));
+            Add(new V5DataOnGrid(@"./tests/test_empty.txt"));
+            Add((V5DataCollection) new V5DataOnGrid(@"./tests/test_0.txt"));
+            Add(new V5DataCollection("empty", new DateTime()));
         }
 
         public string ToLongString(string format)
@@ -71,6 +58,5 @@ namespace Lab
         {
             return listV5Data.GetEnumerator();
         }
-        
     }
 }

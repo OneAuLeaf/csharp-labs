@@ -2,13 +2,42 @@ using System;
 using System.Numerics;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Lab
 {
-    public abstract class V5Data: IEnumerable<DataItem>
+    public abstract class V5Data: INotifyPropertyChanged, IEnumerable<DataItem>
     {
-        public string MetaData { get; set; }
-        public DateTime DateMod { get; set; }
+        private string metaData;
+        private DateTime dateMod;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null) {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        public string MetaData
+        { 
+            get { return metaData; } 
+            set 
+            {
+                metaData = value;
+                OnPropertyChanged("MetaData");
+            } 
+        }
+        public DateTime DateMod
+        { 
+            get { return dateMod; } 
+            set 
+            {
+                dateMod = value;
+                OnPropertyChanged("DateMod");
+            } 
+        }
 
         public V5Data(string data, DateTime date)
         {
