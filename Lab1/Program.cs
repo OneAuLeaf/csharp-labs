@@ -6,7 +6,7 @@ namespace Lab
     {
         static void Logger(object sender, DataChangedEventArgs args)
         {
-            Console.WriteLine($"from object {sender.GetType().ToString()}:\t{args}");
+            Console.WriteLine(args);
         }
 
         static void Main(string[] args)
@@ -22,8 +22,7 @@ namespace Lab
             // replace test
             dataMain[2] = new V5DataCollection("replaced", new DateTime());
             // remove test
-            dataMain.RemoveAll("empty", new DateTime());
-            dataMain.Remove(new V5DataCollection("replaced", new DateTime()));
+            dataMain.Remove("empty", new DateTime());
         }
     }
 }

@@ -39,21 +39,6 @@ namespace Lab
             Add(new V5DataCollection("empty", new DateTime()));
         }
 
-        public bool RemoveAll(string id, DateTime date)
-        {
-            var removable = from item in listV5Data where item.MetaData == id && item.DateMod == date select item;
-            
-            if (removable == null) {
-                return false;
-            }
-            
-            foreach (var item in removable) {
-                Remove(item);
-            }
-
-            return true;   
-        }
-
         public string ToLongString(string format)
         {
             return string.Join("\n", from data in listV5Data select data.ToLongString(format));

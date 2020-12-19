@@ -1,4 +1,6 @@
 using System.ComponentModel;
+using System.Linq;
+using System;
 
 namespace Lab
 {
@@ -35,11 +37,22 @@ namespace Lab
             OnDataChanged(item.GetType().ToString(), ChangeInfo.Add);
         }
 
-        public void Remove(V5Data item)
+        public bool Remove(string id, DateTime date)
         {
-            item.PropertyChanged -= CollectionChangesHandler;
-            listV5Data.Remove(item);
-            OnDataChanged(item.GetType().ToString(), ChangeInfo.Remove);
+            var removable = from item in listV5Data where item.MetaData == id && item.DateMod == date select item;
+            
+            if (removable == null) {
+                return false;
+            }
+            
+            foreach (var item in removable) {
+                item.PropertyChanged -= CollectionChangesHandler;
+                OnDataChanged(item.GetType().ToString(), ChangeInfo.Remove);
+            }
+
+            listV5Data.RemoveAll(item => removable.Contains(item));
+
+            return true;   
         }
     }
 }
