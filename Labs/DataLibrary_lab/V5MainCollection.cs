@@ -40,6 +40,14 @@ namespace Lab
             CollectionChanged += CollectionChangedHandler;
         }
 
+        public bool Contains(string id)
+        {
+            foreach (V5Data item in listV5Data) {
+                if (item.MetaData == id) return true;
+            }
+            return false;
+        }
+
         public void AddDefaults()
         {
             V5DataOnGrid test0 = new V5DataOnGrid(new Grid2D(1.0f, 1.0f, 3, 3), "default", DateTime.Now);

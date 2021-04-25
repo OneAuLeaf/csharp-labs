@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF_lab"
         mc:Ignorable="d"
-        Title="Lab4" Height="900" Width="1500"
+        Title="Lab5" Height="900" Width="1500"
         Loaded="MainWindow_Loaded"
         Closing="MainWindow_Closing">
     <Window.Resources>
@@ -21,8 +21,31 @@
                 <TextBlock Text="{Binding Converter={StaticResource DataItemConverterValue}}" HorizontalAlignment="Left"/>
             </StackPanel>
         </DataTemplate>
+        <Style TargetType="TextBox" x:Key="Validating" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="Background" Value="DarkGray"/>
+                    <Setter Property="ToolTip" 
+                         Value="{Binding RelativeSource={x:Static RelativeSource.Self}, 
+                                         Path=(Validation.Errors)/ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
-	<Grid>
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Open"
+                Executed="OpenCommandHandler"/>
+        <CommandBinding Command="ApplicationCommands.Save"
+                Executed="SaveCommandHandler"
+                CanExecute="CanSaveCommandHandler"/>
+        <CommandBinding Command="ApplicationCommands.Delete"
+                Executed="DeleteCommandHandler"
+                CanExecute="CanDeleteCommandHandler"/>
+        <CommandBinding Command="{x:Static local:MainWindow.AddCustomOnGridCommand}"
+                Executed="AddCustomOnGridCommandHandler"
+                CanExecute="CanAddCustomOnGridCommandHandler"/>
+    </Window.CommandBindings>
+    <Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="3*"/>
 			<RowDefinition Height="40*"/>
@@ -39,23 +62,30 @@
 			  Height="20" Margin="0,0,0,0" Background="WhiteSmoke" VerticalAlignment="Center" HorizontalAlignment="Stretch">
                 <MenuItem Header="File">
                     <MenuItem Header="New" Click="New_Click"/>
-                    <MenuItem Header="Open" Click="Open_Click"/>
-                    <MenuItem Header="Save" Click="Save_Click"/>
+                    <MenuItem Header="Open" Command="ApplicationCommands.Open"/>
+                    <MenuItem Header="Save" Command="ApplicationCommands.Save"/>
                 </MenuItem>
                 <MenuItem Header="Edit">
                     <MenuItem Header="Add Defaults" Click="AddDefaults_Click"/>
                     <MenuItem Header="Add Default V5DataCollection" Click="AddDefaultDataCollection_Click"/>
                     <MenuItem Header="Add Default V5DataOnGrid" Click="AddDefaultDataOnGrid_Click"/>
                     <MenuItem Header="Add Element from File" Click="AddElementFromFile_Click"/>
-                    <MenuItem Header="Remove" Click="Remove_Click"/>
+                    <MenuItem Header="Remove" Command="ApplicationCommands.Delete"/>
+                </MenuItem>
+                <MenuItem Header="Add Custom">
+                    <MenuItem Header="V5DataOnGrid" Command="{x:Static local:MainWindow.AddCustomOnGridCommand}"/>
                 </MenuItem>
             </Menu>
             <TextBlock Grid.Column="1"
-				   Text="Лабораторная работа 4 V5" Foreground="Black" FontWeight="Bold" FontStyle="Italic" FontSize="14"
+				   Text="Лабораторная работа 5 V5" Foreground="Black" FontWeight="Bold" FontStyle="Italic" FontSize="14"
 				   HorizontalAlignment="Center" Margin="0,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="2"
-                   Text="{Binding Path=IsChanged, Converter={StaticResource IsUnsavedConverter}}" FontWeight="Bold" FontSize="14"
-				   HorizontalAlignment="Stretch" Margin="0,0,0,0" Background="WhiteSmoke" TextWrapping="Wrap" VerticalAlignment="Center"/>
+            <ToolBar Grid.Column="2"
+                      Margin="0,5,0,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="WhiteSmoke">
+                <Button Content="Open" FontSize="11" Command="ApplicationCommands.Open"/>
+                <Button Content="Save" FontSize="11" Command="ApplicationCommands.Save"/>
+                <Button Content="Add Custom" FontSize="11" Command="{x:Static local:MainWindow.AddCustomOnGridCommand}"/>
+                <Button Content="Remove" FontSize="11" Command="ApplicationCommands.Delete"/>
+            </ToolBar>  
         </Grid>
 
         <Grid Grid.Row="1">
@@ -91,9 +121,53 @@
                        HorizontalAlignment="Center" Margin="0,5,0,5" TextWrapping="Wrap" VerticalAlignment="Center"/>
                 <ListBox Grid.Row="1" Name="listBox_DataOnGrid"
                      Margin="10" ItemsSource="{Binding Source={StaticResource DataOnGrid}}"/>
-                <TextBlock Grid.Row="2" 
+                <Grid Grid.Row="2" Margin="20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                       Text="Current V5DataOnGrid"
+                       HorizontalAlignment="Left" Margin="0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                    <TextBlock Grid.Column="0"
                        Text="{Binding ElementName=listBox_DataOnGrid, Path=SelectedItem, Converter={StaticResource DataOnGridConverter}}"
-                       HorizontalAlignment="Left" Margin="20" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                       HorizontalAlignment="Left" Margin="0" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="1"
+                       Text="Add Custom V5DataOnGrid"
+                       HorizontalAlignment="Left" Margin="0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                    <Grid Name="AddCustomDataOnGrid" Grid.Column="1" Margin="0,20,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0"
+                                   Text="Info:" 
+                                   HorizontalAlignment="Left" Margin="0" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                        <TextBox Grid.Row="0"
+                                   Text="{Binding Path=Info, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Validating}"
+                                   HorizontalAlignment="Stretch" Margin="40,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="1"
+                                   Text="Nx:" 
+                                   HorizontalAlignment="Left" Margin="0" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                        <TextBox Grid.Row="1"
+                                   Text="{Binding Path=Nx, ValidatesOnDataErrors=True}"  Style="{StaticResource Validating}"
+                                   HorizontalAlignment="Stretch" Margin="40,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="2"
+                                   Text="Ny:" 
+                                   HorizontalAlignment="Left" Margin="0" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                        <TextBox Grid.Row="2" 
+                                   Text="{Binding Path=Ny, ValidatesOnDataErrors=True}" Style="{StaticResource Validating}"
+                                   HorizontalAlignment="Stretch" Margin="40,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="3"
+                                   Text="Step:"
+                                   HorizontalAlignment="Left" Margin="0" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                        <TextBox Grid.Row="3" 
+                                   Text="{Binding Path=Step, ValidatesOnDataErrors=True}" Style="{StaticResource Validating}"
+                                   HorizontalAlignment="Stretch" Margin="40,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                    </Grid>
+                </Grid>
                 <ListBox Grid.Row="3" Name="listBox_GridDetails"
                      Margin="10" ItemsSource="{Binding ElementName=listBox_DataOnGrid, Path=SelectedItem}" ItemTemplate="{StaticResource DataItemTemplate}"/>
             </Grid>
@@ -120,8 +194,11 @@
             <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0"
-				   Text="(c) Колотов Антон, 302" FontStyle="Italic" FontSize="12"
-				   HorizontalAlignment="Left" Margin="5,5,0,5" TextWrapping="Wrap" VerticalAlignment="Center"/>
+				   Text="(c) Колотов Антон, 302" FontWeight="Bold" FontSize="14"
+				   HorizontalAlignment="Left" Margin="5" TextWrapping="Wrap" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="2"
+                   Text="{Binding Path=IsChanged, Converter={StaticResource IsUnsavedConverter}}" FontWeight="Bold" FontSize="14"
+				   HorizontalAlignment="Right" Margin="5" TextWrapping="Wrap" VerticalAlignment="Center"/>
         </Grid>
     </Grid>
 </Window>
